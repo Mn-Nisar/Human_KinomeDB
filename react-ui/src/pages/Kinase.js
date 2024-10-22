@@ -1,52 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
-import Loading from "../UI/Loading";
-import { API_ENDPOINTS } from "../config/api";
+import Frequency from "../components/Kinase/Frequency";
+import HeatMap from "../components/HeatMap/HeatMap";
 
 const Kinase = () => {
   const { kinase } = useParams();
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [heatMap, setHeatMap] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(API_ENDPOINTS.GET_KINASE, {
-          params: { kinase },
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        setData(response.data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [kinase]);
-
-  if (loading) return <Loading />;
-  if (error) return <div>Error: {error}</div>;
+  const getHeatmapHandler = () => {
+    setHeatMap(true);
+  };
 
   return (
-    <div>
-      <h1>Kinase Information</h1>
-      <p>Fasta: {data?.fasta}</p>
-      <h2>Frequency Data</h2>
-      <ul>
-        {data?.frequency.map((freq, index) => (
-          <li key={index}>
-            Site: {freq.site}, Frequency: {freq.frequency}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <React.Fragment>
+      <div className="flex items-center justify-center">
+        <Frequency kinase={kinase} />
+      </div>
+      <hr></hr>
+      <div className="flex items-center justify-center">
+        <button
+          className="px-4 py-4 m-4 bg-blue-500 text-white rounded-sm"
+          onClick={getHeatmapHandler}
+        >
+          Heatmap
+        </button>
+
+        <button className="px-4 py-4 m-4 bg-blue-500 text-white rounded-sm">
+          Radial Distance
+        </button>
+        <button className="px-4 py-4 m-4 bg-blue-500 text-white rounded-sm">
+          More
+        </button>
+      </div>
+
+      {heatMap && <HeatMap kinase={kinase} />}
+    </React.Fragment>
   );
 };
 

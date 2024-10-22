@@ -20,3 +20,13 @@ class DomainSerializer(serializers.Serializer):
     class Meta:
         model = Domain
         fields = ("name","start","end")
+
+
+class CorsstalkSerializer(serializers.Serializer):
+    site1 = serializers.CharField()
+    site2 = serializers.CharField()
+    n_11 = serializers.IntegerField()
+
+    class Meta:
+        model = Corsstalk
+        fields = ("site1","site2","n_11")

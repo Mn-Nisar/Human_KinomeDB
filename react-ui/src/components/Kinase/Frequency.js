@@ -1,53 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import axios from "axios";
-import Loading from "../UI/Loading";
-import { API_ENDPOINTS } from "../config/api";
+import Loading from "../../UI/Loading";
+import { API_ENDPOINTS } from "../../config/api";
+import Lollipop from "../Lollipop/Lollipop";
+import useGet from "../../hooks/useGet";
 
-const Kinase = () => {
-  const { kinase } = useParams();
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+const Frequency = (props) => {
+  const kinase = props.kinase;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(API_ENDPOINTS.GET_KINASE, {
-          params: { kinase },
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        setData(response.data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const url = API_ENDPOINTS.GET_FREQUENCY;
 
-    fetchData();
-  }, [kinase]);
+  const options = {
+    kinase: kinase,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const { data, loading, error } = useGet(url, options);
 
   if (loading) return <Loading />;
   if (error) return <div>Error: {error}</div>;
 
-  return (
-    <div>
-      <h1>Kinase Information</h1>
-      <p>Fasta: {data?.fasta}</p>
-      <h2>Frequency Data</h2>
-      <ul>
-        {data?.frequency.map((freq, index) => (
-          <li key={index}>
-            Site: {freq.site}, Frequency: {freq.frequency}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+  return <div>{data && <Lollipop data={data} />}</div>;
 };
 
-export default Kinase;
+export default Frequency;
