@@ -55,6 +55,7 @@ class CorsstalkAPI(APIView):
             try:
                 crosstalk = Corsstalk.objects.filter(kinase__kinase=kinase)
                 serilaizer = CorsstalkSerializer(crosstalk, many = True)
+                print(serilaizer.data)
                 return Response(serilaizer.data)
             except Exception as e:
                 return Response({'error': e}, status=status.HTTP_404_NOT_FOUND)

@@ -16,7 +16,12 @@ const HeatMap = (props) => {
     },
   };
   const { data, loading, error } = useGet(url, options);
-  return <React.Fragment>{data && <HeatMapPlot data={data} />}</React.Fragment>;
+  return (
+    <React.Fragment>
+      {loading && <Loading />}
+      {data && <HeatMapPlot data={data} />}
+    </React.Fragment>
+  );
 };
 
 export default HeatMap;

@@ -1,4 +1,5 @@
 from pathlib import Path
+from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -71,14 +72,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "kinomeDb.wsgi.application"
 
-
+print(config("DB_USER"))
 
 DATABASES = {
 'default': {
     'ENGINE': 'django.db.backends.mysql',
     'NAME': 'human_kinome_react',
-    'USER': 'admin',
-    'PASSWORD': 'ciods123',
+    'USER': config("DB_USER"),
+    'PASSWORD': config("DB_PASSWORD"),
     'HOST': "newdb-ciods.cz2m6guayo6l.us-west-1.rds.amazonaws.com",
     'PORT': 3306,
     },

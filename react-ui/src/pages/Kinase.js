@@ -6,6 +6,7 @@ import HeatMap from "../components/HeatMap/HeatMap";
 const Kinase = () => {
   const { kinase } = useParams();
   const [heatMap, setHeatMap] = useState(false);
+  // const []
 
   const getHeatmapHandler = () => {
     setHeatMap(true);
