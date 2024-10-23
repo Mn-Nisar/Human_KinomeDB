@@ -19,7 +19,6 @@ const Frequency = (props) => {
   const { data, loading, error } = useGet(url, options);
 
   if (loading) return <Loading />;
-  if (error) return <div>Error: {error}</div>;
 
   return <div>{data && <Lollipop data={data} />}</div>;
 };
