@@ -1,3 +1,195 @@
-djangorestframework==3.15.2
-django-cors-headers==4.4.0
-python-decouple==3.8
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Horizontal Bar Chart</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        .bar {
+            fill: steelblue;
+        }
+        .bar.positive {
+            fill: red;
+        }
+        .bar.negative {
+            fill: blue;
+        }
+        .axis-label {
+            font-size: 12px;
+            text-anchor: middle;
+        }
+        .grid line {
+            stroke: lightgray;
+            stroke-opacity: 0.7;
+            shape-rendering: crispEdges;
+        }
+        .grid path {
+            stroke-width: 0;
+        }
+    </style>
+</head>
+<body>
+    <h2>Plot for Brain Cancer</h2>
+    
+    <label for="kinase">Select Gene: </label>
+    <select id="kinase"></select>
+
+    <label for="phosphorylation">Select Phosphorylation Site:</label>
+    <select id="phosphorylation"></select>
+
+    <svg width="900" height="900"></svg>
+
+    <script>
+        // Set dimensions and margins
+        const margin = {top: 20, right: 30, bottom: 40, left: 150},
+              width = 900 - margin.left - margin.right,
+              height = 1500 - margin.top - margin.bottom;
+
+        const svg = d3.select("svg")
+                      .attr("width", width + margin.left + margin.right)
+                      .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                      .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        // Load CSV data
+        d3.csv("Data.csv").then(function(data) {
+            // Extract patient IDs from the first row, skipping the first three entries
+            const patientIDs = Object.keys(data[0]).slice(3); // Skip first 3 columns
+
+            // Convert string values to numbers for the selected patient IDs
+            data.forEach(d => {
+                patientIDs.forEach(id => {
+                    d[id] = +d[id]; // Convert to number
+                });
+            });
+
+            // Create unique values for kinase dropdown
+            const kinases = [...new Set(data.map(d => d.NAME))];
+
+            // Populate kinase dropdown
+            const kinaseSelect = d3.select("#kinase");
+            kinaseSelect.selectAll("option")
+                .data(kinases)
+                .enter().append("option")
+                .text(d => d);
+
+            // Populate phosphorylation site dropdown initially (empty)
+            const phosphorylationSelect = d3.select("#phosphorylation");
+
+            // Event listener for kinase dropdown
+            kinaseSelect.on("change", function() {
+                const selectedKinase = kinaseSelect.property("value");
+
+                // Filter phosphorylation sites based on the selected kinase
+                const filteredSites = data.filter(d => d.NAME === selectedKinase)
+                                          .map(d => d.Phosphorylation_Site);
+
+                // Populate phosphorylation dropdown based on the selected kinase
+                phosphorylationSelect.selectAll("option").remove(); // Clear existing options
+                phosphorylationSelect.selectAll("option")
+                    .data(filteredSites)
+                    .enter().append("option")
+                    .text(d => d);
+
+                // Automatically trigger chart update based on new selection
+                updateChart();
+            });
+
+            // Event listener for phosphorylation site dropdown
+            phosphorylationSelect.on("change", updateChart);
+
+            // Function to create X gridlines
+            function makeXGridlines(x) {
+                return d3.axisBottom(x)
+                    .ticks(5);
+            }
+
+            // Function to create Y gridlines (optional)
+            function makeYGridlines(y) {
+                return d3.axisLeft(y)
+                    .ticks(10);
+            }
+
+            // Function to render the chart
+            function renderChart(filteredData) {
+                // Clear previous chart
+                svg.selectAll("*").remove();
+
+                // Filter out patient data within the range -0.37 to 0.37
+                const filteredPatientData = patientIDs.filter(id => 
+                    filteredData[0][id] < -0.37 || filteredData[0][id] > 0.37
+                );
+
+                // If no data remains after filtering, show an empty chart
+                if (filteredPatientData.length === 0) {
+                    console.log('No data outside the -0.37 to 0.37 range.');
+                    return;
+                }
+
+                // Set the X scale
+                const x = d3.scaleLinear()
+                    .domain([
+                        d3.min(filteredPatientData, id => filteredData[0][id]), 
+                        d3.max(filteredPatientData, id => filteredData[0][id])
+                    ])
+                    .range([0, width]);
+
+                // Set the Y scale using the filtered patient IDs
+                const y = d3.scaleBand()
+                    .domain(filteredPatientData) // Use the filtered patient IDs array
+                    .range([0, height])
+                    .padding(0.1);
+
+                // Add the X-axis
+                svg.append("g")
+                    .attr("transform", `translate(0,${height})`)
+                    .call(d3.axisBottom(x));
+
+                // Add the Y-axis
+                svg.append("g")
+                    .call(d3.axisLeft(y));
+
+                // Add X gridlines
+                svg.append("g")
+                    .attr("class", "grid")
+                    .attr("transform", `translate(0,${height})`)
+                    .call(makeXGridlines(x)
+                          .tickSize(-height)
+                          .tickFormat(""));
+
+
+                // Create bars for each patient ID
+                svg.selectAll(".bar")
+                   .data(filteredPatientData)
+                   .enter()
+                   .append("rect")
+                   .attr("class", id => filteredData[0][id] >= 0 ? "bar positive" : "bar negative")
+                   .attr("x", id => x(Math.min(0, filteredData[0][id]))) // Handle negative values properly
+                   .attr("y", id => y(id)) // Y position based on patient ID
+                   .attr("width", id => Math.abs(x(filteredData[0][id]) - x(0))) // Width based on magnitude
+                   .attr("height", y.bandwidth());
+            }
+
+            // Function to update the chart based on dropdown selections
+            function updateChart() {
+                const selectedKinase = kinaseSelect.property("value");
+                const selectedPhosphorylation = phosphorylationSelect.property("value");
+
+                // Filter data based on dropdown selections
+                const filteredData = data.filter(d => 
+                    (!selectedKinase || d.NAME === selectedKinase) &&
+                    (!selectedPhosphorylation || d.Phosphorylation_Site === selectedPhosphorylation)
+                );
+
+                // Render the chart with filtered data
+                renderChart(filteredData);
+            }
+
+            // Initial chart render (when no dropdown selection has been made)
+            kinaseSelect.dispatch("change");  // Trigger default chart rendering
+        }).catch(function(error) {
+            console.error('Error loading or parsing data:', error);
+        });
+    </script>
+</body>
+</html>
