@@ -78,8 +78,8 @@ DATABASES = {
 'default': {
     'ENGINE': 'django.db.backends.mysql',
     'NAME': 'human_kinome_react',
-    'USER': config("DB_USER"),
-    'PASSWORD': config("DB_PASSWORD"),
+    'USER': "admin",
+    'PASSWORD': "ciods123",
     'HOST': "newdb-ciods.cz2m6guayo6l.us-west-1.rds.amazonaws.com",
     'PORT': 3306,
     },
