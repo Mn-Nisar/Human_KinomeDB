@@ -46,3 +46,21 @@ class Corsstalk(models.Model):
 
     def __str__(self):
         return f'{self.kinase} ({self.site1}-{self.site2}) - {self.p_value}'
+
+class Cancer(models.Model):
+    cancer = models.CharField(primary_key=True, unique=True, max_length=25)
+
+    def __str__(self):
+        return self.cancer
+
+
+class Cptac(models.Model):
+    kinase = models.ForeignKey(Kinase, on_delete=models.CASCADE, related_name='cptac_kinase')
+    site = models.CharField(max_length=25)
+    cancer = models.ForeignKey(Cancer, on_delete=models.CASCADE, related_name='cptac_cancer')
+    patient = models.CharField(max_length=255)
+    log2fc = models.FloatField()
+
+    def __str__(self):
+        return f'{self.kinase} ({self.site}-{self.patient}) - {self.log2fc}'
+    

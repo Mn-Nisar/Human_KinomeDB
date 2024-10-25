@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Kinase from "./pages/Kinase";
 import Navbar from "./components/Navbar/NavBar";
+import AlphaFold from "./components/Kinase/AlphaFold";
+
 function App() {
   return (
     <React.Fragment>
@@ -11,6 +13,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/kinase/:kinase" element={<Kinase />} />
+          <Route path="/alpha" element={<AlphaFold />} />
+
           {/* <Route path="/faq" element={<Faq />} />
           <Route path="/contact-us" element={<Contact />} /> */}
         </Routes>
