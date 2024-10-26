@@ -33,7 +33,6 @@ const Lollipop = (props) => {
         value: Math.random() * 100,
         character: d,
       }));
-      console.log("data", data);
 
       const sitePositions = site.map((s) => +s.slice(1));
 

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from . models import Kinase, Frequency, Domain, DistanceMatrix, Corsstalk
+from . models import Kinase, Frequency, Domain, DistanceMatrix, Corsstalk , Cptac
 
 
 
@@ -30,3 +30,16 @@ class CorsstalkSerializer(serializers.Serializer):
     class Meta:
         model = Corsstalk
         fields = ("site1","site2","n_11")
+
+
+class CptacSerializer(serializers.ModelSerializer): 
+    
+    class Meta:
+        model = Cptac
+        fields = ("site","patient","log2fc","cancer")
+
+
+    # site = serializers.CharField()
+    # patient = serializers.CharField()
+    # log2fc = serializers.FloatField()
+    # cancer = serializers.CharField(source = 'cancer.cancer')

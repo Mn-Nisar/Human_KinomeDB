@@ -72,8 +72,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "kinomeDb.wsgi.application"
 
-print(config("DB_USER"))
-
 DATABASES = {
 'default': {
     'ENGINE': 'django.db.backends.mysql',

@@ -49,7 +49,7 @@ class Corsstalk(models.Model):
 
 class Cancer(models.Model):
     cancer = models.CharField(primary_key=True, unique=True, max_length=25)
-
+    
     def __str__(self):
         return self.cancer
 

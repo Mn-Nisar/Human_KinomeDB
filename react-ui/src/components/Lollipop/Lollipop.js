@@ -33,7 +33,6 @@ const Lollipop = (props) => {
         value: Math.random() * 100,
         character: d,
       }));
-      console.log("data", data);
 
       const sitePositions = site.map((s) => +s.slice(1));
 
@@ -145,7 +144,6 @@ const Lollipop = (props) => {
         .attr("font-size", "10px")
         .text((d) => d.character)
         .style("opacity", 0);
-      console.log("Number of text elements created:", sequenceText.size());
 
       const zoom = d3
         .zoom()

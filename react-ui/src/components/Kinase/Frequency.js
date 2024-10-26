@@ -7,7 +7,7 @@ import useGet from "../../hooks/useGet";
 
 const Frequency = (props) => {
   const kinase = props.kinase;
-
+  console.log("RUNNIG FREQUENCY");
   const url = API_ENDPOINTS.GET_FREQUENCY;
 
   const options = {

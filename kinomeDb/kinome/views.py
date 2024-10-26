@@ -9,8 +9,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from rest_framework.views import APIView
 
-from .models import Kinase , Frequency, Domain , DistanceMatrix , Corsstalk
-from .serializers import FrequencySerializer , DomainSerializer , CorsstalkSerializer
+from .models import Kinase , Frequency, Domain , DistanceMatrix , Corsstalk , Cptac
+from .serializers import FrequencySerializer , DomainSerializer , CorsstalkSerializer , CptacSerializer
 
 class KinaseAPI(APIView):
     permission_classes = (AllowAny,)
@@ -54,9 +54,8 @@ class CorsstalkAPI(APIView):
         if kinase:
             try:
                 crosstalk = Corsstalk.objects.filter(kinase__kinase=kinase)
-                serilaizer = CorsstalkSerializer(crosstalk, many = True)
-                print(serilaizer.data)
-                return Response(serilaizer.data)
+                serializer = CorsstalkSerializer(crosstalk, many = True)
+                return Response(serializer.data)
             except Exception as e:
                 return Response({'error': e}, status=status.HTTP_404_NOT_FOUND)
         else:
@@ -76,8 +75,19 @@ class CorsstalkAPI(APIView):
 
 # reverse bar plot for each cnacer
 class CptacAPI(APIView):
-    pass
+    def get(self, request):
+        kinase = request.GET.get('kinase')
+        if kinase:
+            try:
+                cptac = Cptac.objects.filter(kinase__kinase=kinase)
+                print(cptac)
+                serializer = CptacSerializer(cptac, many = True)
+                print(serializer.data)
+                return Response(serializer.data)
+            except Exception as e:
+                return Response({'error': e}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response({'error': 'Please provide Valid kinase name'}, status=status.HTTP_404_NOT_FOUND)
 
 # Some Sheera plot
-class ConservationAPI(APIView):
-    pass
+# class ConservationAPI(APIView):

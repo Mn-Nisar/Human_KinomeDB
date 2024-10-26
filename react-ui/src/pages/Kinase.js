@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import Frequency from "../components/Kinase/Frequency";
 import HeatMap from "../components/HeatMap/HeatMap";
 import Conserve from "../components/Conserve/Conserve";
-import SectionFour from "../components/SectionFour/SectionFour";
+import Cptac from "../components/Cptac/Cptac";
 import SectionFive from "../components/SectionFive/SectionFive";
 import "./Kinase.css";
 
@@ -14,11 +14,15 @@ const Kinase = () => {
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
   };
+  const frequencyComponent = useMemo(
+    () => <Frequency kinase={kinase} />,
+    [kinase]
+  );
 
   return (
     <React.Fragment>
       <div className="flex items-center justify-center">
-        <Frequency kinase={kinase} />
+        {frequencyComponent}
       </div>
       <hr />
 
@@ -43,10 +47,10 @@ const Kinase = () => {
           Some Sheera Plot
         </div>
         <div
-          className={`tab-item ${activeTab === "sectionFour" ? "active" : ""}`}
-          onClick={() => handleTabClick("sectionFour")}
+          className={`tab-item ${activeTab === "cptac" ? "active" : ""}`}
+          onClick={() => handleTabClick("cptac")}
         >
-          Section Four Plot
+          CPTAC Cancer data
         </div>
         <div
           className={`tab-item ${activeTab === "sectionFive" ? "active" : ""}`}
@@ -54,16 +58,15 @@ const Kinase = () => {
         >
           Section Five Plot
         </div>
-        </div>
+      </div>
 
       {/* Tab Content */}
       <div className="content-section">
         {activeTab === "heatmap" && <HeatMap kinase={kinase} />}
         {activeTab === "conserve" && <Conserve kinase={kinase} />}
-        {activeTab === "sectionFour" && <SectionFour kinase={kinase} />}
+        {activeTab === "cptac" && <Cptac kinase={kinase} />}
         {activeTab === "sectionFive" && <SectionFive kinase={kinase} />}
       </div>
-      
     </React.Fragment>
   );
 };
