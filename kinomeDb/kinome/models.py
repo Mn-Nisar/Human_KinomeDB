@@ -63,4 +63,19 @@ class Cptac(models.Model):
 
     def __str__(self):
         return f'{self.kinase} ({self.site}-{self.patient}) - {self.log2fc}'
+
+class FamName(models.Model):
+    family = models.CharField(primary_key=True, unique=True, max_length=25)
     
+    def __str__(self):
+        return self.family
+
+
+class Family(models.Model):
+    kinase = models.ForeignKey(Kinase, on_delete=models.CASCADE, related_name='family_kinase')
+    site = models.CharField(max_length=25)
+    score = models.FloatField()  
+    family = models.ForeignKey(FamName, on_delete=models.CASCADE, related_name='family_famname')
+
+    def __str__(self):
+        return f'{self.kinase} ({self.site} - {self.score})'    

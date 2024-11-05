@@ -1,8 +1,8 @@
 import React from "react";
 import Loading from "../../UI/Loading";
-import BarPlot from "./BarPlot";
 import { API_ENDPOINTS } from "../../config/api";
 import useGet from "../../hooks/useGet";
+import BarPlot from "./BarPlot";
 
 const Cptac = (props) => {
   const kinase = props.kinase;

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from . models import Kinase, Frequency, Domain, DistanceMatrix, Corsstalk , Cptac
+from . models import Kinase, Frequency, Domain, DistanceMatrix, Corsstalk , Cptac, Family
 
 
 
@@ -37,6 +37,12 @@ class CptacSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cptac
         fields = ("site","patient","log2fc","cancer")
+
+class FamilySerializer(serializers.ModelSerializer): 
+    
+    class Meta:
+        model = Family
+        fields = ("site","score","family","kinase")
 
 
     # site = serializers.CharField()
