@@ -4,6 +4,22 @@
     border-bottom: 2px solid #f1f1f1;
     margin-bottom: 16px;
   }
+  .flex {
+    display: flex;
+    margin-left:100px; 
+  }
+
+  .navbar {
+    display: flex; 
+  }
+  
+  .sidebar {
+    width: 260px;
+    background-color: #f4f4f4;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+  }
   
   .tab-item {
     padding: 10px 20px;
@@ -27,10 +43,15 @@
   }
   
   .content-section {
-    padding: 16px;
+    padding: 10px;
     border: 1px solid #ddd;
     border-radius: 0 5px 5px 5px;
-    width: 80%; 
-    margin: 0 auto; 
+    width: 100%; 
+    margin-left:50px; 
   }
-  
+  hr {
+    border: none;         
+    height: 2px;         
+    background-color:white; 
+    margin: 20px 0;     
+  }
