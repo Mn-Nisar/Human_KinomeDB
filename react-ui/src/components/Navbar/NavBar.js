@@ -3,8 +3,8 @@ import React, { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
-  const kinaseNameRef = useRef(); // Changed variable name for clarity
-  const navigate = useNavigate();
+const kinaseNameRef = useRef(); // Changed variable name for clarity
+const navigate = useNavigate();
 
   const handleSearch = () => {
     const kinase = kinaseNameRef.current.value.trim(); // Trim whitespace
@@ -34,7 +34,7 @@ const NavBar = () => {
           />
          
            <button
-          onClick={handleSearch} 
+           onClick={handleSearch} 
            className="p-2 text-white rounded-r" style={{ backgroundColor: "#7192b4" }}>
             Search
           </button>
